@@ -3,7 +3,7 @@ package Utils;
 public class Carro {
     private String renavam;
     private String nome;
-    private String categoria; //1= economico2=executivo3=executivo
+    private int categoria; //1= economico2=executivo3=executivo
     private int ano;
     private double preco;
     private int quant;
@@ -14,7 +14,7 @@ public class Carro {
       ", ano=" + ano + ", preco=" + preco + ", quantidade disponivel=" + quant;
     }
     
-    public Carro(String renavam, String nome, String categoria, int ano, double preco, int quant) {
+    public Carro(String renavam, String nome, int categoria, int ano, double preco, int quant) {
         this.renavam = renavam;
         this.nome = nome;
         this.categoria = categoria;
@@ -35,10 +35,10 @@ public class Carro {
     public void setNome(String nome) {
         this.nome = nome;
     }
-    public String getCategoria() {
+    public int getCategoria() {
         return categoria;
     }
-    public void setCategoria(String categoria) {
+    public void setCategoria(int categoria) {
         this.categoria = categoria;
     }
     public int getAno() {

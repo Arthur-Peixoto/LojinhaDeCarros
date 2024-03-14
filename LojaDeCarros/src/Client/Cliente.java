@@ -64,7 +64,6 @@ public class Cliente {
                             listaRetornadaCliente = lojinha.listarCarros();
                             System.out.println("");
 
-                            // mostra para o cliente 
                             for (Carro carro : listaRetornadaCliente) { // todos os atributos
                                 System.out.println("Nome = " + carro.getNome() + ", Renavan = " + carro.getRenavam() + 
                                 ", Categoria = " + carro.getCategoria() + ", Ano = " + carro.getAno() + 
@@ -137,7 +136,7 @@ public class Cliente {
                             double preco = scanner.nextDouble();
                             
                             Carro carroAdicionado =  lojinha.adicionarCarro(renavan, nome, categoria, ano, preco);
-                            System.out.println("\nCarro adicionado = " + carroAdicionado.toString()); // imprimindo pro cliente 
+                            System.out.println("\nCarro adicionado = " + carroAdicionado.toString());
                             break;
                         case 2:
                             System.out.println("\nDigite o nome do carro que deseja apagar:");
@@ -145,49 +144,48 @@ public class Cliente {
                             Carro carroRemovido = lojinha.excluirCarro(apagado);
 
                             if (carroRemovido instanceof Carro){
-                                System.out.println("\nCarro removido = " + carroRemovido.toString()); // imprimindo pro cliente 
+                                System.out.println("\nCarro removido = " + carroRemovido.toString()); 
                             }else{
-                                System.out.println("\nCarro não encontrado/removido"); // imprimindo pro cliente 
+                                System.out.println("\nCarro não encontrado/removido");
                             }
                             break;
-                        case 3:  // listar (mesmo do cliente)
+                        case 3: 
                             List<Carro> listaRetornada = new ArrayList<>();
                             listaRetornada = lojinha.listarCarros();
                             System.out.println("");
 
-                            for (Carro carro : listaRetornada) { // todos os atributos
+                            for (Carro carro : listaRetornada) { 
                                 carro.toString();
                             }
                             break;
-                        case 4: // pesquisar carro (mesmo do cliente)
+                        case 4: 
                             System.out.println("\nDigite o nome ou o renavan do carro que deseja pesquisar:");
                             String chave = System.console().readLine();
                             Carro carroBuscado = lojinha.buscarCarro(chave);
 
-                            // testa se foi achadp mesmo => se não foi retorna null
                             if (carroBuscado instanceof Carro){
-                                System.out.println("\nCarro achado = " + carroBuscado.toString()); // imprimindo pro cliente 
+                                System.out.println("\nCarro achado = " + carroBuscado.toString()); 
                             }else{
-                                System.out.println("\nCarro não encontrado"); // imprimindo pro cliente 
+                                System.out.println("\nCarro não encontrado");
                             }
                             break;
-                        case 5: // alterar carro
+                        case 5: 
                             System.out.println("\nDigite o nome ou o renavan do carro que deseja pesquisar:");
                             String chaveAlterar = System.console().readLine();
                             Carro carroAlterado = lojinha.buscarCarro(chaveAlterar);
 
-                            if (carroAlterado instanceof Carro) // se for um carro => pode alterar
+                            if (carroAlterado instanceof Carro) 
                             {
                                 System.out.println("\nAltere os atributos do carro pesquisado: ");
 
                                 System.out.println("\nDigite o novo renavan do carro:");
-                                String renavanAlte = System.console().readLine();
+                                String renavanAlte = scanner.nextLine();
         
                                 System.out.println("\nDigite o novo nome do carro:");
-                                String nomeAlte = System.console().readLine();
+                                String nomeAlte = scanner.nextLine();
         
                                 System.out.println("\nDigite a nova categoria do carro:");
-                                String categoriaAlte = System.console().readLine();
+                                int categoriaAlte = scanner.nextInt();
         
                                 System.out.println("\nDigite o novo ano do carro:");
                                 int anoAlte = scanner.nextInt();
@@ -207,19 +205,18 @@ public class Cliente {
                             }
                         }
                         break;
-                        case 6: // quantidade de carros (mesmo de cliente)
+                        case 6:
                             int quant = lojinha.getQuantCarros();
                             System.out.println("\nQuantidade de carros disponívies = " + quant);
                             break;
-                        case 7: // comprar carro (mesmo de cliente)
+                        case 7: 
                             System.out.println("\nDigite o nome do carro que deseja comprar:");
                             String nomeCarro = System.console().readLine();
                             lojinha.comprarCarro(nomeCarro);
                             System.out.println("Carro " + nomeCarro + " comprado com sucesso, Parabéns!");
                             break;
                         case 0:
-                        // salva em arquivo diferente
-                        lojinha.writeFile("../Utils/garagem.txt");
+                        lojinha.writeFile("../Utils/concessionaria.txt");
                             System.out.println("\nObrigado por utilizar a loja de carros!");
                             break;
                         default:
