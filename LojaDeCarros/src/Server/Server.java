@@ -17,7 +17,7 @@ public class Server {
             List<Loja> lojinhas = new ArrayList<>();
     
             for (String endereco : enderecos) {
-                Loja lojinha = new ServidorLoja("D:/Users/vitor/git/Car-Store-Client-Server/CarStore/src/arquivos/carros.txt");
+                Loja lojinha = new ServidorLoja("../Utils/garagem.txt");
                 lojinhas.add(lojinha);
             }
     
