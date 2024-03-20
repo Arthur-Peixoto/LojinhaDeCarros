@@ -92,7 +92,7 @@ public class Cliente {
                             lojinha.comprarCarro(nomeCarro);
                             System.out.println("Carro " + nomeCarro + " comprado!");
                         case 0:
-                            lojinha.writeFile("../Utils/garagem.txt");
+                            lojinha.writeFile("LojaDeCarros/src/Utils/garagem.txt");
                             System.out.println("\nObrigado por utilizar a loja de carros!");
                             break;
                         default:
@@ -127,7 +127,7 @@ public class Cliente {
                             String nome = scanner.nextLine();
 
                             System.out.println("\nDigite a categoria do carro que deseja adicionar:");
-                            String categoria = scanner.nextLine();
+                            int categoria = scanner.nextInt();
 
                             System.out.println("\nDigite o ano do carro que deseja adicionar:");
                             int ano = scanner.nextInt();
@@ -135,7 +135,7 @@ public class Cliente {
                             System.out.println("\nDigite o preço do carro que deseja adicionar:");
                             double preco = scanner.nextDouble();
                             
-                            Carro carroAdicionado =  lojinha.adicionarCarro(renavan, nome, categoria, ano, preco);
+                            Carro carroAdicionado =  lojinha.adicionarCarro(renavan, nome, categoria, ano, preco, 1);
                             System.out.println("\nCarro adicionado = " + carroAdicionado.toString());
                             break;
                         case 2:

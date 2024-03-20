@@ -9,15 +9,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Server {
-    private static final String[] enderecos = {"endereco1", "endereco2", "endereco3"};
+    private static final String[] enderecos = {"cliente1", "cliente2", "cliente3"};
     public static void main(String[] args) {
         try {
             Registry registry = LocateRegistry.createRegistry(50005);
     
             List<Loja> lojinhas = new ArrayList<>();
     
-            for (String endereco : enderecos) {
-                Loja lojinha = new ServidorLoja("../Utils/garagem.txt");
+            for (String cliente : enderecos) {
+                Loja lojinha = new ServidorLoja("LojaDeCarros/src/Utils/concessionaria.txt");
                 lojinhas.add(lojinha);
             }
     

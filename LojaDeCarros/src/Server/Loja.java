@@ -1,13 +1,14 @@
 package Server;
 
 import java.rmi.Remote;
+import java.rmi.RemoteException;
 import java.util.List;
 
 import Utils.Carro;
 import Utils.User;
 
 public interface Loja extends Remote{
-    public Carro adicionarCarro(String renavan, String nome, String categoria, int ano, double preco);
+    public Carro adicionarCarro(String renavan, String nome, int categoria, int ano, double preco, int quant);
     public Carro buscarCarro(String chave);
     public Carro excluirCarro(String nome);  
     public Carro alterar(String chave, String renavam, String nome, int categoria, int ano, double preco, int quant);
@@ -18,5 +19,5 @@ public interface Loja extends Remote{
 
     public User autenticar(String login, String senha);
     public void writeFile(String caminho);
-    public void readFile(String caminho);
+    public void readFile(String caminho) throws RemoteException;
 }

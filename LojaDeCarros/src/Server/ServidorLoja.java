@@ -4,7 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.rmi.Remote;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -15,9 +15,9 @@ import Utils.User;
 
 public class ServidorLoja implements Loja {
 
-    private List<Carro> carros;
+    private List<Carro> carros = new ArrayList<>();
     private static List<User> users = new ArrayList<>();
-    String caminho;
+    String caminho = "";
 
     public ServidorLoja(String caminho) {
         this.caminho = caminho;
@@ -25,12 +25,17 @@ public class ServidorLoja implements Loja {
         users.add(new User("vasco", "qqqq", 1));
         users.add(new User("flamengo", "qqqq", 2));
 
-        readFile(caminho);
+        try {
+            readFile(caminho);
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        
     }
 
     @Override
-    public Carro adicionarCarro(String renavan, String nome, String categoria, int ano, double preco) {
-        Carro carroNovo = new Carro(renavan, nome, ano, ano, preco, ano);
+    public Carro adicionarCarro(String renavan, String nome, int categoria, int ano, double preco, int quant) {
+        Carro carroNovo = new Carro(renavan, nome, categoria, ano, preco, quant);
         carros.add(carroNovo);
         return carroNovo;
     }
@@ -162,7 +167,7 @@ public class ServidorLoja implements Loja {
     }
 
     @Override
-    public void readFile(String caminho) {
+    public void readFile(String caminho) throws RemoteException {
         try {
             File arquivoCarros = new File(caminho);
             Scanner scanner = new Scanner(arquivoCarros);

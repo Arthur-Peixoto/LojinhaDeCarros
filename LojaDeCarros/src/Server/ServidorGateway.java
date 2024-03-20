@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -18,9 +19,9 @@ public class ServidorGateway implements Gateway{
     Loja[] replicLojas;
     boolean isServer;
 
-    private List<Carro> carros;
+    private List<Carro> carros = new ArrayList<>();
     private static List<User> users = new ArrayList<>();
-    private static String caminho = "../Utils/garagem.txt";
+    private static String caminho = "LojaDeCarros/src/Utils/concessionaria.txt";
 
 
     public ServidorGateway(Loja[] replicaLojas, boolean isServer){
@@ -31,13 +32,20 @@ public class ServidorGateway implements Gateway{
         users.add(new User("vasco", "qqqq", 1));
         users.add(new User("flamengo", "qqqq", 2));
 
-        readFile(caminho);
+        try {
+            readFile(caminho);
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+        
+        
+        
 
     }
 
     @Override
-    public Carro adicionarCarro(String renavan, String nome, int categoria, int ano, double preco) {
-        Carro carroNovo = new Carro(renavan, nome, ano, ano, preco, ano);
+    public Carro adicionarCarro(String renavan, String nome, int categoria, int ano, double preco, int quant) {
+        Carro carroNovo = new Carro(renavan, nome, categoria, ano, preco, quant);
         carros.add(carroNovo);
         return carroNovo;
     }
@@ -160,7 +168,7 @@ public class ServidorGateway implements Gateway{
     public void writeFile(String caminho) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(caminho))) {
             for (Carro carro : carros) {
-                writer.write(carro.toString());
+                writer.write("vasco");
                 writer.newLine();
             }
         } catch (IOException e) {
@@ -169,14 +177,13 @@ public class ServidorGateway implements Gateway{
     }
 
     @Override
-    public void readFile(String caminho) {
+    public void readFile(String caminho) throws RemoteException{
         try {
             File arquivoCarros = new File(caminho);
             Scanner scanner = new Scanner(arquivoCarros);
             while (scanner.hasNextLine()) {
                 String texto = scanner.nextLine();
                 String[] dados = texto.split(",");
-
                 String nome = dados[0];
                 String renavan = dados[1];
                 int categoria = Integer.parseInt(dados[2]);
