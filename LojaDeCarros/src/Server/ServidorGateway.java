@@ -17,6 +17,7 @@ public class ServidorGateway implements Loja{
 
     private int currentIndex = 0;
     Loja[] replicLojas;
+    
     boolean isServer;
 
     private List<Carro> carros = new ArrayList<>();
@@ -42,8 +43,20 @@ public class ServidorGateway implements Loja{
 
     @Override
     public Carro adicionarCarro(String nome, String renavam, int categoria, int ano, double preco, int quant) throws RemoteException {
+        
         Carro carroNovo = new Carro(nome, renavam, categoria, ano, preco, quant);
         carros.add(carroNovo);
+
+        if (isServer) {
+            // Atualiza as réplicas
+            for (int i = 0; i < replicLojas.length; i++) {
+                if (replicLojas[i] != this) {
+                    replicLojas[i].adicionarCarro(renavam, nome, categoria, ano, preco,1);
+                    System.out.println("Atualizado na réplica " + i);
+                }
+            }
+        }
+
         return carroNovo;
     }
 
@@ -94,6 +107,17 @@ public class ServidorGateway implements Loja{
                             carro.setQuant(quant);
                             System.out.println("Carro alterado: " + nome);
                             getQuantCarros();
+
+                            if (isServer) {
+                                // Atualiza as réplicas
+                                for (int i = 0; i < replicLojas.length; i++) {
+                                    if (replicLojas[i] != this) {
+                                        replicLojas[i].alterar(chave, nome, renavam, categoria, ano, preco, quant);
+                                        System.out.println("Atualizado na réplica " + i);
+                                    }
+                                }
+                            }
+
                             return carro;
                         }
                     }
@@ -128,11 +152,28 @@ public class ServidorGateway implements Loja{
         }else {
             
             carro.setQuant(carro.getQuant() - 1);
-            if(carro.getQuant() == 0) { 
+            if(carro.getQuant() == 0) {
                 carros.remove(carro);
             }
-            writeFile("src/Utils/garagem.txt");
+            writeFile("src/Utils/concessionaria.txt");
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter("src/Utils/garagem.txt"))) {
+                    writer.write(carro.toString());
+                    writer.newLine();
+                }
+            catch (IOException e) {
+                System.err.println(e.getMessage());
+            }
         } 
+
+        if (isServer) {
+            // Atualiza as réplicas
+            for (int i = 0; i < replicLojas.length; i++) {
+                if (replicLojas[i] != this) {
+                    replicLojas[i].getQuantCarros();
+                    System.out.println("Atualizado na réplica " + i);
+                }
+            }
+        }
         return carro.getNome()+" vendido com sucesso!\t agora restam apenas"+carro.getQuant()+" unidades";
     }
 
@@ -169,7 +210,8 @@ public class ServidorGateway implements Loja{
             for (Carro carro : carros) {
                 writer.write(carro.getNome() + "," + carro.getRenavam() + "," + 
                 carro.getCategoria() + "," + 
-                carro.getPreco() + "," + 
+                carro.getAno() + "," + 
+                carro.getPreco() + "," +
                 carro.getQuant());
                 writer.newLine();
             }

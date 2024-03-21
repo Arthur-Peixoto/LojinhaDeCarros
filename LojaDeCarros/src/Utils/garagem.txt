@@ -1,0 +1,1 @@
+Nome=Honda City, renavan=345678912, categoria=2, ano=2021, preco=70000.0, quantidade disponivel=0

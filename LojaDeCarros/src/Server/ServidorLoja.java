@@ -123,7 +123,14 @@ public class ServidorLoja implements Loja {
             if (carro.getQuant() == 0) {
                 carros.remove(carro);
             }
-            writeFile("src/Utils/garagem.txt");
+            writeFile("src/Utils/concessionaria.txt");
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter("src/Utils/garagem.txt"))) {
+                    writer.write(carro.toString());
+                    writer.newLine();
+                }
+            catch (IOException e) {
+                System.err.println(e.getMessage());
+            }
         }
         return carro.getNome() + " vendido com sucesso!\t agora restam apenas" + carro.getQuant() + " unidades";
     }
@@ -158,7 +165,11 @@ public class ServidorLoja implements Loja {
     public void writeFile(String caminho) throws RemoteException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(caminho))) {
             for (Carro carro : carros) {
-                writer.write(carro.toString());
+                writer.write(carro.getNome() + "," + carro.getRenavam() + "," + 
+                carro.getCategoria() + "," + 
+                carro.getAno() + "," + 
+                carro.getPreco() + "," + 
+                carro.getQuant());
                 writer.newLine();
             }
         } catch (IOException e) {
@@ -175,13 +186,13 @@ public class ServidorLoja implements Loja {
                 String texto = scanner.nextLine();
                 String[] dados = texto.split(",");
 
-                String nome = dados[0];
-                String renavan = dados[1];
+                String renavam = dados[0];
+                String nome = dados[1];
                 int categoria = Integer.parseInt(dados[2]);
                 int ano = Integer.parseInt(dados[3]);
                 double preco = Double.parseDouble(dados[4]);
                 int quantidade = Integer.parseInt(dados[5]);
-                Carro carro = new Carro(nome, renavan, categoria, ano, preco, quantidade);
+                Carro carro = new Carro(nome, renavam, categoria, ano, preco, quantidade);
                 carros.add(carro);
             }
             scanner.close();

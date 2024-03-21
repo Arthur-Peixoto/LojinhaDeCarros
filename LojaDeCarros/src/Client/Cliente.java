@@ -96,7 +96,7 @@ public class Cliente {
                             lojinha.comprarCarro(nomeCarro);
                             System.out.println("Carro " + nomeCarro + " comprado!");
                         case 0:
-                            lojinha.writeFile("LojaDeCarros/src/Utils/garagem.txt");
+                            lojinha.writeFile("src/Utils/concessionaria.txt");
                             System.out.println("\nObrigado por utilizar a loja de carros!");
                             break;
                         default:
@@ -221,7 +221,7 @@ public class Cliente {
                             System.out.println("Carro " + nomeCarro + " comprado com sucesso, Parabéns!");
                             break;
                         case 0:
-                            lojinha.writeFile("../Utils/concessionaria.txt");
+                            lojinha.writeFile("src/Utils/concessionaria.txt");
                             System.out.println("\nObrigado por utilizar a loja de carros!");
                             break;
                         default:
