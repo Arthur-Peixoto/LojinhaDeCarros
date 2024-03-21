@@ -1,6 +1,8 @@
 package Utils;
 
-public class Carro {
+import java.io.Serializable;
+
+public class Carro implements Serializable{
     private String renavam;
     private String nome;
     private int categoria; //1= economico2=executivo3=executivo

@@ -28,38 +28,38 @@ public class ServidorLoja implements Loja {
         try {
             readFile(caminho);
         } catch (Exception e) {
-            // TODO: handle exception
+            System.out.println(e);
         }
-        
+
     }
 
     @Override
-    public Carro adicionarCarro(String renavan, String nome, int categoria, int ano, double preco, int quant) {
-        Carro carroNovo = new Carro(renavan, nome, categoria, ano, preco, quant);
+    public Carro adicionarCarro(String nome, String renavam, int categoria, int ano, double preco, int quant) throws RemoteException {
+        Carro carroNovo = new Carro(nome, renavam, categoria, ano, preco, quant);
         carros.add(carroNovo);
         return carroNovo;
     }
 
     @Override
-    public Carro buscarCarro(String chave) {
+    public Carro buscarCarro(String chave) throws RemoteException{
         boolean encontrou = false;
         for (Carro carro : this.carros) {
-                if (carro.getNome().equalsIgnoreCase(chave) || carro.getRenavam().equalsIgnoreCase(chave)) {
-                    carro.toString();
-                    System.out.println("-------------------------");
-                    encontrou = true;
-                    return carro;
-                }
+            if (carro.getNome().equalsIgnoreCase(chave) || carro.getRenavam().equalsIgnoreCase(chave)) {
+                carro.toString();
+                System.out.println("-------------------------");
+                encontrou = true;
+                return carro;
             }
-            if(!encontrou){
-                System.out.println("Carro não encontrado!");
-                System.out.println("-------------------------");               
-            }
-            return null;
+        }
+        if (!encontrou) {
+            System.out.println("Carro não encontrado!");
+            System.out.println("-------------------------");
+        }
+        return null;
     }
 
     @Override
-    public Carro excluirCarro(String nome) {
+    public Carro excluirCarro(String nome) throws RemoteException {
         Iterator<Carro> iter = carros.iterator();
         while (iter.hasNext()) {
             Carro carro = iter.next();
@@ -76,28 +76,28 @@ public class ServidorLoja implements Loja {
     }
 
     @Override
-    public Carro alterar(String chave, String renavam, String nome, int categoria, int ano, double preco,int quant) {
-                for (Carro carro : this.carros) {
-                        if (carro.getNome().equalsIgnoreCase(chave) || carro.getRenavam().equalsIgnoreCase(chave)) {
-                            carro.setNome(nome);
-                            carro.setRenavam(renavam);
-                            carro.setAno(ano);
-                            carro.setCategoria(categoria);
-                            carro.setPreco(preco);
-                            carro.setQuant(quant);
-                            System.out.println("Carro alterado: " + nome);
-                            getQuantCarros();
-                            return carro;
-                        }
-                    }
-                    return null;
+    public Carro alterar(String chave, String renavam, String nome, int categoria, int ano, double preco, int quant) throws RemoteException {
+        for (Carro carro : this.carros) {
+            if (carro.getNome().equalsIgnoreCase(chave) || carro.getRenavam().equalsIgnoreCase(chave)) {
+                carro.setNome(nome);
+                carro.setRenavam(renavam);
+                carro.setAno(ano);
+                carro.setCategoria(categoria);
+                carro.setPreco(preco);
+                carro.setQuant(quant);
+                System.out.println("Carro alterado: " + nome);
+                getQuantCarros();
+                return carro;
+            }
+        }
+        return null;
     }
 
     @Override
-    public int getQuantCarros() {
+    public int getQuantCarros() throws RemoteException {
         int quantidadeTotal = 0;
 
-        for (Carro carro : carros){
+        for (Carro carro : carros) {
             quantidadeTotal += carro.getQuant();
         }
         System.out.println("Quantidade de carros disponívies = " + quantidadeTotal);
@@ -106,7 +106,7 @@ public class ServidorLoja implements Loja {
     }
 
     @Override
-    public String comprarCarro(String nome) {
+    public String comprarCarro(String nome) throws RemoteException {
         Carro carro = null;
         for (Carro carrinho : carros) {
             if (carrinho.getNome().equals(nome)) {
@@ -114,21 +114,22 @@ public class ServidorLoja implements Loja {
                 break;
             }
         }
-        
+
         if (carro == null) {
             System.out.println("Carro não encontrado na loja");
-            return "não encontrou"; 
-        }else {
+            return "não encontrou";
+        } else {
             carro.setQuant(carro.getQuant() - 1);
-            if(carro.getQuant() == 0) { 
+            if (carro.getQuant() == 0) {
                 carros.remove(carro);
             }
-        } 
-        return carro.getNome()+" vendido com sucesso!\t agora restam apenas"+carro.getQuant()+" unidades";
+            writeFile("src/Utils/garagem.txt");
+        }
+        return carro.getNome() + " vendido com sucesso!\t agora restam apenas" + carro.getQuant() + " unidades";
     }
 
     @Override
-    public List<Carro> listarCarros() {
+    public List<Carro> listarCarros() throws RemoteException{
         List<Carro> carrosRetorno = new ArrayList<>();
         for (Carro carro : carros) {
             carrosRetorno.add(carro);
@@ -139,13 +140,12 @@ public class ServidorLoja implements Loja {
     }
 
     @Override
-    public User autenticar(String login, String senha) {
-         for (User user : users) {
+    public User autenticar(String login, String senha) throws RemoteException {
+        for (User user : users) {
             if (user.getLogin().equals(login) && user.getSenha().equals(senha)) {
-                if(user.getRole() == 1){
+                if (user.getRole() == 1) {
                     System.out.println("cliente");
-                }
-                else if (user.getRole() == 2) {
+                } else if (user.getRole() == 2) {
                     System.out.println("funcionário");
                 }
                 return user;
@@ -155,7 +155,7 @@ public class ServidorLoja implements Loja {
     }
 
     @Override
-    public void writeFile(String caminho) {
+    public void writeFile(String caminho) throws RemoteException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(caminho))) {
             for (Carro carro : carros) {
                 writer.write(carro.toString());

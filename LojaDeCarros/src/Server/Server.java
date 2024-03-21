@@ -17,7 +17,7 @@ public class Server {
             List<Loja> lojinhas = new ArrayList<>();
     
             for (String cliente : enderecos) {
-                Loja lojinha = new ServidorLoja("LojaDeCarros/src/Utils/concessionaria.txt");
+                Loja lojinha = new ServidorLoja("src/Utils/concessionaria.txt");
                 lojinhas.add(lojinha);
             }
     
@@ -27,7 +27,7 @@ public class Server {
 
             Loja stub = (Loja) UnicastRemoteObject.exportObject(redirector, 0);
 
-            registry.rebind("redirecionador", stub);
+            registry.rebind("vasco", stub);
 
             System.out.println("Servidor pronto para receber conexões dos clientes");
     

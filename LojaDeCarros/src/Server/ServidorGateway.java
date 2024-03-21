@@ -13,7 +13,7 @@ import java.util.Scanner;
 import Utils.Carro;
 import Utils.User;
 
-public class ServidorGateway implements Gateway{
+public class ServidorGateway implements Loja{
 
     private int currentIndex = 0;
     Loja[] replicLojas;
@@ -21,7 +21,7 @@ public class ServidorGateway implements Gateway{
 
     private List<Carro> carros = new ArrayList<>();
     private static List<User> users = new ArrayList<>();
-    private static String caminho = "LojaDeCarros/src/Utils/concessionaria.txt";
+    private static String caminho = "src/Utils/concessionaria.txt";
 
 
     public ServidorGateway(Loja[] replicaLojas, boolean isServer){
@@ -38,20 +38,17 @@ public class ServidorGateway implements Gateway{
             // TODO: handle exception
         }
         
-        
-        
-
     }
 
     @Override
-    public Carro adicionarCarro(String renavan, String nome, int categoria, int ano, double preco, int quant) {
-        Carro carroNovo = new Carro(renavan, nome, categoria, ano, preco, quant);
+    public Carro adicionarCarro(String nome, String renavam, int categoria, int ano, double preco, int quant) throws RemoteException {
+        Carro carroNovo = new Carro(nome, renavam, categoria, ano, preco, quant);
         carros.add(carroNovo);
         return carroNovo;
     }
 
     @Override
-    public Carro buscarCarro(String chave) {
+    public Carro buscarCarro(String chave) throws RemoteException {
         boolean encontrou = false;
         for (Carro carro : this.carros) {
                 if (carro.getNome().equalsIgnoreCase(chave) || carro.getRenavam().equalsIgnoreCase(chave)) {
@@ -69,7 +66,7 @@ public class ServidorGateway implements Gateway{
     }
 
     @Override
-    public Carro excluirCarro(String nome) {
+    public Carro excluirCarro(String nome) throws RemoteException{
         Iterator<Carro> iter = carros.iterator();
         while (iter.hasNext()) {
             Carro carro = iter.next();
@@ -86,7 +83,7 @@ public class ServidorGateway implements Gateway{
     }
 
     @Override
-    public Carro alterar(String chave, String renavam, String nome, int categoria, int ano, double preco,int quant) {
+    public Carro alterar(String chave, String renavam, String nome, int categoria, int ano, double preco,int quant) throws RemoteException {
                 for (Carro carro : this.carros) {
                         if (carro.getNome().equalsIgnoreCase(chave) || carro.getRenavam().equalsIgnoreCase(chave)) {
                             carro.setNome(nome);
@@ -116,7 +113,7 @@ public class ServidorGateway implements Gateway{
     }
 
     @Override
-    public String comprarCarro(String nome) {
+    public String comprarCarro(String nome) throws RemoteException {
         Carro carro = null;
         for (Carro carrinho : carros) {
             if (carrinho.getNome().equals(nome)) {
@@ -129,16 +126,18 @@ public class ServidorGateway implements Gateway{
             System.out.println("Carro não encontrado na loja");
             return "não encontrou"; 
         }else {
+            
             carro.setQuant(carro.getQuant() - 1);
             if(carro.getQuant() == 0) { 
                 carros.remove(carro);
             }
+            writeFile("src/Utils/garagem.txt");
         } 
         return carro.getNome()+" vendido com sucesso!\t agora restam apenas"+carro.getQuant()+" unidades";
     }
 
     @Override
-    public List<Carro> listarCarros() {
+    public List<Carro> listarCarros() throws RemoteException {
         List<Carro> carrosRetorno = new ArrayList<>();
         for (Carro carro : carros) {
             carrosRetorno.add(carro);
@@ -149,7 +148,7 @@ public class ServidorGateway implements Gateway{
     }
 
     @Override
-    public User autenticar(String login, String senha) {
+    public User autenticar(String login, String senha) throws RemoteException {
          for (User user : users) {
             if (user.getLogin().equals(login) && user.getSenha().equals(senha)) {
                 if(user.getRole() == 1){
@@ -165,10 +164,13 @@ public class ServidorGateway implements Gateway{
     }
 
     @Override
-    public void writeFile(String caminho) {
+    public void writeFile(String caminho) throws RemoteException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(caminho))) {
             for (Carro carro : carros) {
-                writer.write("vasco");
+                writer.write(carro.getNome() + "," + carro.getRenavam() + "," + 
+                carro.getCategoria() + "," + 
+                carro.getPreco() + "," + 
+                carro.getQuant());
                 writer.newLine();
             }
         } catch (IOException e) {
@@ -197,18 +199,6 @@ public class ServidorGateway implements Gateway{
         } catch (Exception e) {
             System.out.println("Erro ao ler arquivo");
         }
-    }
-
-    @Override
-    public String getNextAddress() {
-        currentIndex = (currentIndex + 1) % replicLojas.length;
-        return currentIndex + " :index atual";
-    }
-
-    @Override
-    public void setNextAddress(String Address) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setNextAddress'");
     }
 
 }

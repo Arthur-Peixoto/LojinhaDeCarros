@@ -1,6 +1,8 @@
 package Utils;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
     public String login;
     public String senha;
     public int role;
